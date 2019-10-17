@@ -5,4 +5,5 @@ package: Media
 type: module
 dependencies:
   - drupal:image
+  - drupal:system (>=8.7)
   - drupal:user

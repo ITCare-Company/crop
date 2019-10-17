@@ -102,7 +102,7 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
     $usage = [];
     foreach ($image_styles as $image_style) {
       if (count($usage) < 2) {
-        $usage[] = $image_style->link();
+        $usage[] = $image_style->toLink(NULL, 'edit-form')->toString();
       }
     }
 
