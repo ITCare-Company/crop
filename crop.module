@@ -165,7 +165,7 @@ function crop_file_url_alter(&$uri) {
   if (strpos($uri, '/styles/') !== FALSE && preg_match('/\/styles\/(.*?)\/(.*?)\/(.+)/', $uri, $match)) {
     // Match image style, schema, file subdirectory and file name.
     // Get the image style ID.
-    $image_style = $match[1];
+    $image_style_id = $match[1];
     // Get the file path without query parameter.
     $parsed_uri = UrlHelper::parse($match[3]);
     // Get the file URI using parsed schema and file path.
@@ -177,12 +177,7 @@ function crop_file_url_alter(&$uri) {
       return;
     }
 
-    /** @var \Drupal\image\Entity\ImageStyle $image_style */
-    if (!$image_style = ImageStyle::load($image_style)) {
-      return;
-    }
-
-    if ($crop = Crop::getCropFromImageStyle($file_uri, $image_style)) {
+    if ($crop = Crop::getCropFromImageStyleId($file_uri, $image_style_id)) {
       // Found a crop for this image, append a hash of it to the URL,
       // so that browsers reload the image and CDNs and proxies can be bypassed.
       $shortened_hash = substr(md5(implode($crop->position()) . implode($crop->anchor())), 0, 8);
