@@ -21,7 +21,7 @@ function crop_requirements($phase) {
     $incompatible = TRUE;
   }
   elseif (\Drupal::moduleHandler()->moduleExists('media_entity')) {
-    $info = system_get_info('module', 'media_entity');
+    $info = \Drupal::service('extension.list.module')->getExtensionInfo('media_entity');
     if (version_compare($info['version'], '8.x-2') < 0) {
       $incompatible = TRUE;
     }
