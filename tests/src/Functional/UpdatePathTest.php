@@ -6,7 +6,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
  * @group crop
- * @group legacy
  */
 class UpdatePathTest extends UpdatePathTestBase {
 
@@ -22,7 +21,6 @@ class UpdatePathTest extends UpdatePathTestBase {
 
   public function testUpdatePath() {
     $this->runUpdates();
-    $this->assertTrue(\Drupal::database()->schema()->indexExists('crop_field_data', 'crop__uri_type'));
   }
 
 }
