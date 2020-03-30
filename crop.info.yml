@@ -6,3 +6,4 @@ type: module
 dependencies:
   - drupal:image
   - drupal:user
+configure: crop.overview_types
