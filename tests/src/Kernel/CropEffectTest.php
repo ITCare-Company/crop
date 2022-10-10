@@ -14,7 +14,7 @@ class CropEffectTest extends CropUnitTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'image', 'crop', 'file', 'system'];
+  protected static $modules = ['user', 'image', 'crop', 'file', 'system'];
 
   /**
    * Tests manual crop image effect.

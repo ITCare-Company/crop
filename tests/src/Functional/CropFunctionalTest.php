@@ -7,6 +7,7 @@ use Drupal\crop\Entity\Crop;
 use Drupal\crop\Entity\CropType;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\file\FileInterface;
 
 /**
  * Functional tests for crop API.
@@ -20,7 +21,7 @@ class CropFunctionalTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['crop', 'file'];
+  protected static $modules = ['crop', 'file'];
 
   /**
    * Admin user.
@@ -51,7 +52,7 @@ class CropFunctionalTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(['administer crop types', 'administer image styles']);
@@ -68,7 +69,7 @@ class CropFunctionalTest extends BrowserTestBase {
   /**
    * Tests crop type crud pages.
    */
-  public function testCropTypeCrud() {
+  public function testCropTypeCrud(): void {
     // Anonymous users don't have access to crop type admin pages.
     $this->drupalGet('admin/config/media/crop');
     $this->assertSession()->statusCodeEquals(403);
@@ -163,11 +164,12 @@ class CropFunctionalTest extends BrowserTestBase {
    *
    * Tests crop_file_url_alter().
    */
-  protected function doTestFileUriAlter() {
+  protected function doTestFileUriAlter(): void {
     // Get the test file.
-    \Drupal::service('file_system')->copy(drupal_get_path('module', 'crop') . '/tests/files/sarajevo.png', PublicStream::basePath());
+    \Drupal::service('file_system')->copy(\Drupal::service('extension.list.module')->getPath('crop') . '/tests/files/sarajevo.png', PublicStream::basePath());
+
     $file_uri = 'public://sarajevo.png';
-    $file = File::create(['uri' => $file_uri, 'status' => FILE_STATUS_PERMANENT]);
+    $file = File::create(['uri' => $file_uri, 'status' => FileInterface::STATUS_PERMANENT]);
     $file->save();
 
     /** @var \Drupal\crop\CropInterface $crop */
@@ -192,7 +194,7 @@ class CropFunctionalTest extends BrowserTestBase {
     // Build an image style derivative for the file URI.
     $image_style_uri = $this->testStyle->buildUri($file_uri);
 
-    $image_style_uri_url = file_create_url($image_style_uri);
+    $image_style_uri_url = \Drupal::service('file_url_generator')->generateAbsoluteString($image_style_uri);
     $this->assertTrue(strpos($image_style_uri_url, $shortened_hash) !== FALSE, 'The image style URL contains a shortened hash.');
 
     $image_style_url = $this->testStyle->buildUrl($file_uri);
