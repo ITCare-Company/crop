@@ -1,6 +1,6 @@
 name: Crop API
 description: 'Provides storage and API for image crops.'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 package: Media
 type: module
 dependencies:
