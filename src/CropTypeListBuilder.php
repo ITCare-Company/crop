@@ -89,7 +89,7 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
       'data' => $entity->label(),
       'class' => ['menu-label'],
     ];
-    $row['description'] = Xss::filterAdmin($entity->description);
+    $row['description'] = Xss::filterAdmin($entity->description ?? '');
     $row['aspect_ratio'] = $entity->getAspectRatio();
 
     // Load all image styles used by the current crop type.
