@@ -68,7 +68,7 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header = [];
-    $header['name'] = t('Name');
+    $header['name'] = $this->t('Name');
     $header['description'] = [
       'data' => $this->t('Description'),
       'class' => [RESPONSIVE_PRIORITY_MEDIUM],
@@ -109,7 +109,7 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
 
     $other_image_styles = array_splice($image_styles, 2);
     if ($other_image_styles) {
-      $usage_message = t('@first, @second and @count more', [
+      $usage_message = $this->t('@first, @second and @count more', [
         '@first' => $usage[0],
         '@second' => $usage[1],
         '@count' => count($other_image_styles),
@@ -128,7 +128,7 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function render() {
     $build = parent::render();
-    $build['table']['#empty'] = t('No crop types available. <a href="@link">Add crop type</a>.', [
+    $build['table']['#empty'] = $this->t('No crop types available. <a href="@link">Add crop type</a>.', [
       '@link' => $this->urlGenerator->generateFromRoute('crop.type_add'),
     ]);
     return $build;

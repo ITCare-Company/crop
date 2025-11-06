@@ -4,11 +4,11 @@ namespace Drupal\Tests\crop\Functional;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\crop\Entity\Crop;
 use Drupal\crop\Entity\CropType;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Functional tests for crop API.
@@ -82,11 +82,11 @@ class CropFunctionalTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/media/crop');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains(t('No crop types available.'));
-    $this->assertSession()->linkExists(t('Add crop type'));
+    $this->assertSession()->pageTextContains('No crop types available.');
+    $this->assertSession()->linkExists('Add crop type');
 
     // Can access add crop type form.
-    $this->clickLink(t('Add crop type'));
+    $this->clickLink('Add crop type');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/config/media/crop/add');
 
@@ -99,7 +99,7 @@ class CropFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/media/crop/add');
     $this->submitForm($edit, 'Save crop type');
-    $this->assertSession()->responseContains(t('The crop type %name has been added.', ['%name' => $edit['label']]));
+    $this->assertSession()->responseContains("The crop type <em class=\"placeholder\">{$edit['label']}</em> has been added.");
     $this->cropType = CropType::load($crop_type_id);
     $this->assertSession()->addressEquals('admin/config/media/crop');
     $label = $this->xpath("//td[contains(concat(' ',normalize-space(@class),' '),' menu-label ')]");
@@ -107,8 +107,8 @@ class CropFunctionalTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($edit['description']);
 
     // Check edit form.
-    $this->clickLink(t('Edit'));
-    $this->assertSession()->pageTextContains(t('Edit @name crop type', ['@name' => $edit['label']]));
+    $this->clickLink('Edit');
+    $this->assertSession()->pageTextContains("Edit {$edit['label']} crop type");
 
     $this->assertSession()->responseContains($edit['id']);
     $this->assertSession()->fieldExists('edit-label');
@@ -120,8 +120,8 @@ class CropFunctionalTest extends BrowserTestBase {
     self::assertTrue(strpos($option[0]->getText(), $edit['label']) !== FALSE, 'Crop type label found on image effect page.');
     $this->drupalGet('admin/config/media/image-styles/manage/' . $this->testStyle->id() . '/add/crop_crop');
     $this->submitForm(['data[crop_type]' => $edit['id']], 'Add effect');
-    $this->assertSession()->pageTextContains(t('The image effect was successfully applied.'));
-    $this->assertSession()->pageTextContains(t('Manual crop uses @name crop type', ['@name' => $edit['label']]));
+    $this->assertSession()->pageTextContains('The image effect was successfully applied.');
+    $this->assertSession()->pageTextContains("Manual crop uses {$edit['label']} crop type");
     $this->testStyle = $this->container->get('entity_type.manager')->getStorage('image_style')->loadUnchanged($this->testStyle->id());
     self::assertEquals($this->testStyle->getEffects()->count(), 1, 'One image effect added to test image style.');
     $effect_configuration = $this->testStyle->getEffects()->getIterator()->current()->getConfiguration();
@@ -140,18 +140,18 @@ class CropFunctionalTest extends BrowserTestBase {
     // Try to create crop type with same machine name.
     $this->drupalGet('admin/config/media/crop/add');
     $this->submitForm($edit, 'Save crop type');
-    $this->assertSession()->pageTextContains(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Delete crop type.
     $this->drupalGet('admin/config/media/crop');
     $this->assertSession()->linkExists('Test image style');
-    $this->clickLink(t('Delete'));
-    $this->assertSession()->pageTextContains(t('Are you sure you want to delete the crop type @name?', ['@name' => $edit['label']]));
+    $this->clickLink('Delete');
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the crop type {$edit['label']}?");
 
     $this->drupalGet('admin/config/media/crop/manage/' . $edit['id'] . '/delete');
     $this->submitForm([], 'Delete');
-    $this->assertSession()->responseContains(t('The crop type %name has been deleted.', ['%name' => $edit['label']]));
-    $this->assertSession()->pageTextContains(t('No crop types available.'));
+    $this->assertSession()->responseContains("The crop type <em class=\"placeholder\">{$edit['label']}</em> has been deleted.");
+    $this->assertSession()->pageTextContains('No crop types available.');
 
   }
 

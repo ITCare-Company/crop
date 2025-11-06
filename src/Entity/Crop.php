@@ -122,7 +122,7 @@ class Crop extends ContentEntityBase implements CropInterface {
     $plugin_manager = \Drupal::service('plugin.manager.crop.entity_provider');
 
     if (!$plugin_manager->hasDefinition($this->entity_type->value)) {
-      throw new EntityProviderNotFoundException(t('Entity provider @id not found.', ['@id' => $this->entity_type->value]));
+      throw new EntityProviderNotFoundException(sprintf('Entity provider %s not found.', $this->entity_type->value));
     }
 
     return $plugin_manager->createInstance($this->entity_type->value);
