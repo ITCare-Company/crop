@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\crop\CropInterface;
 use Drupal\crop\EntityProviderNotFoundException;
+use Drupal\image\Controller\ImageStyleDownloadController;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 
@@ -163,6 +164,12 @@ class Crop extends ContentEntityBase implements CropInterface {
   public static function getCropFromImageStyleId($uri, $image_style_id) {
     $crop = NULL;
     $effects = self::getEffectsFromImageStyleId($image_style_id);
+
+    // If the image style converts the image to a different format, use the
+    // original URI to find the appropriate crop.
+    if (isset($effects['image_convert'])) {
+      $uri = ImageStyleDownloadController::getUriWithoutConvertedExtension($uri);
+    }
 
     if (isset($effects['crop_crop']['type'])) {
       $crop = self::findCrop($uri, $effects['crop_crop']['type']);
@@ -390,6 +397,16 @@ class Crop extends ContentEntityBase implements CropInterface {
       ->setTranslatable(TRUE);
 
     return $fields;
+  }
+
+  /**
+   * Returns a short hash representation of this crop.
+   *
+   * @return string
+   *   A short, hashed representation of this crop.
+   */
+  public function getShortHash(): string {
+    return substr(md5(implode($this->position()) . implode($this->anchor())), 0, 8);
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\crop\Functional;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\crop\Entity\Crop;
 use Drupal\crop\Entity\CropType;
@@ -184,25 +185,27 @@ class CropFunctionalTest extends BrowserTestBase {
     // Test that the hash is appended both when a URL is created and passed
     // through file_create_url() and when a URL is created, without additional
     // file_create_url() calls.
-    $shortened_hash = substr(md5(implode($crop->position()) . implode($crop->anchor())), 0, 8);
+    $shortened_hash = $crop->getShortHash();
 
     // Build an image style derivative for the file URI.
     $image_style_uri = $this->testStyle->buildUri($file_uri);
 
     $image_style_uri_url = \Drupal::service('file_url_generator')->generateAbsoluteString($image_style_uri);
-    $this->assertTrue(strpos($image_style_uri_url, $shortened_hash) !== FALSE, 'The image style URL contains a shortened hash.');
+    $url = UrlHelper::parse($image_style_uri_url);
+    $this->assertSame($shortened_hash, $url['query']['h'], 'The image style URL contains a shortened hash.');
 
     $image_style_url = $this->testStyle->buildUrl($file_uri);
-    $this->assertTrue(strpos($image_style_url, $shortened_hash) !== FALSE, 'The image style URL contains a shortened hash.');
+    $url = UrlHelper::parse($image_style_url);
+    $this->assertSame($shortened_hash, $url['query']['h'], 'The image style URL contains a shortened hash.');
 
     // Update the crop to assert the hash has changed.
     $crop->setPosition('80', '80')->save();
     $old_hash = $shortened_hash;
-    $new_hash = substr(md5(implode($crop->position()) . implode($crop->anchor())), 0, 8);
+    $new_hash = $crop->getShortHash();
 
     $image_style_url = $this->testStyle->buildUrl($file_uri);
-    $this->assertFalse(strpos($image_style_url, $old_hash) !== FALSE, 'The image style URL does not contain the old hash.');
-    $this->assertTrue(strpos($image_style_url, $new_hash) !== FALSE, 'The image style URL contains an updated hash.');
+    $url = UrlHelper::parse($image_style_url);
+    $this->assertSame($new_hash, $url['query']['h'], 'The image style URL contains an updated hash.');
 
     // Delete the file and the crop entity associated,
     // the crop entity are auto cleaned by crop_file_delete().
