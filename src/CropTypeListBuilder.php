@@ -59,7 +59,7 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('url_generator'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -132,6 +132,22 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
       '@link' => $this->urlGenerator->generateFromRoute('crop.type_add'),
     ]);
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity): array {
+    $flush = [
+      'title' => $this->t('Flush'),
+      'weight' => 200,
+      'url' => $entity->toUrl('flush-form'),
+    ];
+
+    return parent::getDefaultOperations($entity) + [
+      'flush' => $flush,
+    ];
+
   }
 
 }
