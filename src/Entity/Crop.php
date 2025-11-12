@@ -205,7 +205,7 @@ class Crop extends ContentEntityBase implements CropInterface {
     if (!isset(static::$effectsByImageStyle[$image_style_id])) {
       $image_style = ImageStyle::load($image_style_id);
       if ($image_style === NULL) {
-        return [];
+        return static::$effectsByImageStyle[$image_style_id] = [];
       }
 
       $effects = [];
