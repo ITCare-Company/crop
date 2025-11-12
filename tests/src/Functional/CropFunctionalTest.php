@@ -177,11 +177,14 @@ class CropFunctionalTest extends BrowserTestBase {
     $this->drupalGet('admin/config/media/crop');
     $assert_session->linkExists('Test image style');
     $this->clickLink('Delete');
-    $assert_session->pageTextContains("Are you sure you want to delete the crop type {$edit['label']}?");
-
-    $this->drupalGet('admin/config/media/crop/manage/' . $edit['id'] . '/delete');
+    $label = $edit['label'];
+    $assert_session->pageTextContains("Are you sure you want to delete the crop type $label?");
+    // Confirm that the user is warned about the crop type being used by other
+    // config objects.
+    $assert_session->pageTextContains('The listed configuration will be deleted.');
+    $assert_session->pageTextContains('Test image style');
     $this->submitForm([], 'Delete');
-    $assert_session->responseContains("The crop type <em class=\"placeholder\">{$edit['label']}</em> has been deleted.");
+    $assert_session->statusMessageContains("The crop type $label has been deleted.");
     $assert_session->pageTextContains('No crop types available.');
   }
 

@@ -2,14 +2,14 @@
 
 namespace Drupal\crop\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
  * Provides a form for crop type deletion.
  */
-class CropTypeDeleteForm extends EntityConfirmFormBase {
+class CropTypeDeleteForm extends EntityDeleteForm {
 
   /**
    * {@inheritdoc}
