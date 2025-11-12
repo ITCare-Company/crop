@@ -278,7 +278,7 @@ class Crop extends ContentEntityBase implements CropInterface {
     // case, set this configuration variable to false.
     $flush_derivative_images = \Drupal::config('crop.settings')->get('flush_derivative_images');
     if ($flush_derivative_images) {
-      image_path_flush($this->uri->value);
+      $this->imageStylePathFlush();
     }
   }
 
@@ -398,6 +398,23 @@ class Crop extends ContentEntityBase implements CropInterface {
       ->setTranslatable(TRUE);
 
     return $fields;
+  }
+
+  /**
+   * Flushes cached versions (related to the current crop type) of a file.
+   *
+   * @see image_path_flush
+   */
+  protected function imageStylePathFlush(): void {
+    $styles = $this->entityTypeManager()
+      ->getStorage('image_style')
+      ->loadByProperties([
+        'effects.*.data.crop_type' => $this->bundle(),
+      ]);
+
+    foreach ($styles as $style) {
+      $style->flush($this->uri->value);
+    }
   }
 
   /**

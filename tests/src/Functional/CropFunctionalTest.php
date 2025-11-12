@@ -231,6 +231,12 @@ class CropFunctionalTest extends BrowserTestBase {
     $this->assertFalse(Crop::cropExists($this->fileUri), 'The Crop entity was correctly deleted after file delete.');
   }
 
+  /**
+   * Creates a file to use for testing crops.
+   *
+   * @return \Drupal\file\FileInterface
+   *   A new, saved file entity.
+   */
   private function createFile(): FileInterface {
     \Drupal::service('file_system')
       ->copy(__DIR__ . '/../../files/sarajevo.png', 'public://');
