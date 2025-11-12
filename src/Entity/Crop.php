@@ -28,7 +28,8 @@ use Drupal\image\ImageStyleInterface;
  *       "default" = "Drupal\Core\Entity\ContentEntityForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityConfirmFormBase",
  *       "edit" = "Drupal\Core\Entity\ContentEntityForm"
- *     }
+ *     },
+ *     "workspace" = "Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler",
  *   },
  *   base_table = "crop",
  *   data_table = "crop_field_data",
