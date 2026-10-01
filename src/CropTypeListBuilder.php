@@ -3,6 +3,7 @@
 namespace Drupal\crop;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -137,14 +138,14 @@ class CropTypeListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity): array {
+  public function getDefaultOperations(EntityInterface $entity, CacheableMetadata $cacheability): array {
     $flush = [
       'title' => $this->t('Flush'),
       'weight' => 200,
       'url' => $entity->toUrl('flush-form'),
     ];
 
-    return parent::getDefaultOperations($entity) + [
+    return parent::getDefaultOperations($entity, $cacheability) + [
       'flush' => $flush,
     ];
 
