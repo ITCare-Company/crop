@@ -13,7 +13,7 @@ class CropTypeAspectRatioValidationConstraintValidator extends ConstraintValidat
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     /** @var \Drupal\crop\Entity\CropType $value */
     $aspect_ratio = $value->getAspectRatio();
     if (!empty($aspect_ratio) && !preg_match($value::VALIDATION_REGEXP, $aspect_ratio)) {
