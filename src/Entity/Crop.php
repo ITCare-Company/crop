@@ -254,12 +254,15 @@ class Crop extends ContentEntityBase implements CropInterface {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if (!$this->isNewRevision() && isset($this->original) && (!isset($record->revision_log) || $record->revision_log === '')) {
+    // D12: EntityBase::$original was renamed to $originalEntity with no BC
+    // magic getter (change record 3295826) -- use getOriginal() when present.
+    $original_entity = method_exists($this, 'getOriginal') ? $this->getOriginal() : $this->original;
+    if (!$this->isNewRevision() && isset($original_entity) && (!isset($record->revision_log) || $record->revision_log === '')) {
       // If we are updating an existing crop without adding a new revision, we
       // need to make sure $entity->revision_log is reset whenever it is empty.
       // Therefore, this code allows us to avoid clobbering an existing log
       // entry with an empty one.
-      $record->revision_log = $this->original->revision_log->value;
+      $record->revision_log = $original_entity->revision_log->value;
     }
   }
 

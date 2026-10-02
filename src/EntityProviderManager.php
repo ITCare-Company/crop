@@ -5,6 +5,7 @@ namespace Drupal\crop;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\crop\Attribute\CropEntityProvider;
 
 /**
  * Manages crop entity provider plugins.
@@ -23,7 +24,7 @@ class EntityProviderManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Crop/EntityProvider', $namespaces, $module_handler, 'Drupal\crop\EntityProviderInterface', 'Drupal\crop\Annotation\CropEntityProvider');
+    parent::__construct('Plugin/Crop/EntityProvider', $namespaces, $module_handler, 'Drupal\crop\EntityProviderInterface', CropEntityProvider::class, 'Drupal\crop\Annotation\CropEntityProvider');
 
     $this->alterInfo('crop_entity_provider_info');
     $this->setCacheBackend($cache_backend, 'crop_entity_provider_plugins');

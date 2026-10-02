@@ -25,7 +25,7 @@ function crop_requirements($phase) {
       'title' => t('Crop API'),
       'value' => t('This branch of Crop API is not compatible with the version of Media Entity installed.'),
       'description' => t('This branch of Crop API is not compatible with the version of Media Entity installed.'),
-      'severity' => REQUIREMENT_ERROR,
+      'severity' => (class_exists('\\Drupal\\Core\\Extension\\Requirement\\RequirementSeverity') ? \Drupal\Core\Extension\Requirement\RequirementSeverity::Error : REQUIREMENT_ERROR),
     ];
   }
 
